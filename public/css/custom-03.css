@@ -1,0 +1,111 @@
+#sidebar_main .sidebar_main_header {
+    height: inherit;
+    border-bottom: none;
+    background: #38B9C2 !important;
+    /*background: none;*/
+}
+#sidebar_main .sidebar_main_header .sidebar_logo {
+    height: inherit;
+    line-height: inherit;
+    overflow: hidden;
+}
+#sidebar_main .sidebar_main_header .sidebar_logo a {
+    margin-left: 0;
+}
+
+#header_main {
+    background: #FFFFFF !important;
+}
+#header_main .sSwitch .sSwitchIcon, #header_main .sSwitch .sSwitchIcon:after, #header_main .sSwitch .sSwitchIcon:before {
+    background: #000000 !important;
+    opacity: 0.7 !important;
+}
+#header_main .sSwitch:before {
+    background: #000000 !important;
+    opacity: 0.7 !important;
+}
+#menu_top_dropdown .top_menu_toggle .material-icons {
+    color: #000000 !important;
+    opacity: 0.7 !important;
+}
+
+.scrollbar-inner.scroll-content {
+    background: #38B9C2 !important;
+}
+
+#sidebar_main .menu_section>ul>li>a {
+    color: #000000 !important;
+}
+#sidebar_main .menu_section>ul>li>a>.menu_icon .material-icons {
+    color: #000000 !important;
+    opacity: 0.6 !important;
+}
+#sidebar_main .menu_section>ul>li.current_section>a .menu_title {
+    color: #FFFFFF !important;
+}
+#sidebar_main .menu_section>ul>li.current_section>a>.menu_icon .material-icons {
+    color: #FFFFFF !important;
+    opacity: 0.6 !important;
+}
+#sidebar_main {
+    width: 250px;
+    background: #38B9C2 !important;
+}
+#page_heading {
+    background: #f3f3f3;
+}
+#sidebar_main .menu_section>ul>li ul li.act_item>a {
+    color: #fff;
+    font-weight: 500;
+}
+#sidebar_main .menu_section>ul>li ul li.act_item>a>.menu_icon>i {
+    color: #fff;
+}
+/****************************************/
+.logo_custom{
+    /*height: 160px;*/
+    /*width: auto;*/
+    /*margin-left: 6px;*/
+    padding: 20px 10px 10px;
+}
+.logo_custom_small{
+    margin-top: 10px;
+}
+.md-fab-wrapper.fab-save{
+    position: fixed !important;
+    top: 57px !important;
+    right: 24px !important;
+    height: fit-content !important;
+}
+.datatable-first-line > th{
+    text-align: center;
+}
+.wizard>.content>.body {
+    padding: 20px 24px 5px !important;
+}
+.wizard>.steps>ul>li {
+    width: inherit;
+}
+.uk-alert-info {
+    background: #008240 !important;
+}
+#dt_colVis>thead>tr>th{
+    font-weight: bold;
+    color: #000000bd;
+}
+.box-compte h2 {
+    color: #008240 !important;
+}
+.categ_parent_list {
+    list-style: none;
+    padding: 10px 10px 0;
+    max-height: 200px;
+    overflow: auto;
+    box-shadow: 0 0 3px lightgrey;
+}
+.icheck-inline{
+    margin-bottom: 5px;
+}
+.img_thumb {
+    width: 60px !important;
+}
