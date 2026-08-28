@@ -66,14 +66,22 @@ class LocataireController extends Controller
             ->filter(function ($query) use ($request) {
                 if ($request->has('search') && $search = $request->search['value']) {
 
-                    $search = strtolower($search);
+                    // Découpe la recherche en mots pour permettre "prénom nom" en une seule saisie :
+                    // chaque mot doit correspondre à au moins une des colonnes (AND entre mots, OR entre colonnes).
+                    $words = preg_split('/\s+/', trim($search), -1, PREG_SPLIT_NO_EMPTY);
 
-                    $query->where(function ($q) use ($search) {
-                        $q->whereRaw('LOWER(prenom) LIKE ?', ["%{$search}%"])
-                          ->orWhereRaw('LOWER(nom) LIKE ?', ["%{$search}%"])
-                          ->orWhereRaw('LOWER(cin) LIKE ?', ["%{$search}%"])
-                          ->orWhereRaw('LOWER(adresse) LIKE ?', ["%{$search}%"])
-                          ->orWhereRaw('LOWER(telephone) LIKE ?', ["%{$search}%"]);
+                    $query->where(function ($query) use ($words) {
+                        foreach ($words as $word) {
+                            $word = strtolower($word);
+
+                            $query->where(function ($q) use ($word) {
+                                $q->whereRaw('LOWER(prenom) LIKE ?', ["%{$word}%"])
+                                  ->orWhereRaw('LOWER(nom) LIKE ?', ["%{$word}%"])
+                                  ->orWhereRaw('LOWER(cin) LIKE ?', ["%{$word}%"])
+                                  ->orWhereRaw('LOWER(adresse) LIKE ?', ["%{$word}%"])
+                                  ->orWhereRaw('LOWER(telephone) LIKE ?', ["%{$word}%"]);
+                            });
+                        }
                     });
                 }
             })
@@ -240,6 +248,53 @@ class LocataireController extends Controller
         return Redirect::route($this->route.'.index')
             ->with('success_msg', 'Modification effectuée avec succès.');
 
+    }
+
+    /**
+     * Télécharge la liste des locataires au format CSV (sauvegarde).
+     *
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function export()
+    {
+        $query = Locataire::orderBy('nom');
+
+        if (Auth::user()->zone === "Ziguinchor") {
+            $query->where('users_id', Auth::id());
+        }
+
+        $locataires = $query->get();
+
+        $filename = 'locataires_'.now()->format('Y-m-d_His').'.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ];
+
+        $columns = ['Prénom', 'Nom', 'CIN', 'Total loyer', 'Adresse', 'Téléphone'];
+
+        $callback = function () use ($locataires, $columns) {
+            $handle = fopen('php://output', 'w');
+            // BOM UTF-8 pour qu'Excel affiche correctement les accents
+            fwrite($handle, "\xEF\xBB\xBF");
+            fputcsv($handle, $columns, ';');
+
+            foreach ($locataires as $locataire) {
+                fputcsv($handle, [
+                    $locataire->prenom,
+                    $locataire->nom,
+                    $locataire->cin,
+                    $locataire->total_loyer,
+                    $locataire->adresse,
+                    $locataire->telephone,
+                ], ';');
+            }
+
+            fclose($handle);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     /**

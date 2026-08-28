@@ -82,7 +82,7 @@
 <script src="{{ asset('dist/bower_components/datatables-buttons/js/buttons.print.js') }}"></script>
 
 <!-- 6️⃣ Initialisation Altair DataTables -->
-{{-- <script src="{{ asset('dist/assets/js/pages/plugins_datatables.min.js') }}"></script> --}}
+<script src="{{ asset('dist/assets/js/pages/plugins_datatables.min.js') }}"></script>
 
 <!-- 7️⃣ JS spécifique aux pages -->
 @yield('scripts')

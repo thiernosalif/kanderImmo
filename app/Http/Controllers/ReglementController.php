@@ -149,15 +149,23 @@ class ReglementController extends Controller
 
         if ($request->has('search') && $search = $request->search['value']) {
 
-            $search = strtolower($search);
+            // Découpe la recherche en mots pour permettre "prénom nom" en une seule saisie :
+            // chaque mot doit correspondre à au moins une des colonnes (AND entre mots, OR entre colonnes).
+            $words = preg_split('/\s+/', trim($search), -1, PREG_SPLIT_NO_EMPTY);
 
-            $query->where(function ($q) use ($search) {
-                $q->whereRaw('LOWER(locataires.nom) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(locataires.prenom) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(locataires.cin) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(locataires.adresse) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(reglements.montant) LIKE ?', ["%{$search}%"])
-                  ->orWhereRaw('LOWER(reglements.transactionreference) LIKE ?', ["%{$search}%"]);
+            $query->where(function ($query) use ($words) {
+                foreach ($words as $word) {
+                    $word = strtolower($word);
+
+                    $query->where(function ($q) use ($word) {
+                        $q->whereRaw('LOWER(locataires.nom) LIKE ?', ["%{$word}%"])
+                          ->orWhereRaw('LOWER(locataires.prenom) LIKE ?', ["%{$word}%"])
+                          ->orWhereRaw('LOWER(locataires.cin) LIKE ?', ["%{$word}%"])
+                          ->orWhereRaw('LOWER(locataires.adresse) LIKE ?', ["%{$word}%"])
+                          ->orWhereRaw('LOWER(reglements.montant) LIKE ?', ["%{$word}%"])
+                          ->orWhereRaw('LOWER(reglements.transactionreference) LIKE ?', ["%{$word}%"]);
+                    });
+                }
             });
         }
     })

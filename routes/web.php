@@ -26,6 +26,7 @@ Route::get('/home', 'HomeController@index')->name('home');
      */
 
     Route::get('/locataires', 'LocataireController@index')->name('locataires.index');
+    Route::get('locataires/export', 'LocataireController@export')->name('locataires.export');
     Route::get('locataire/create', 'LocataireController@create')->name('locataires.create');
     Route::post('locataire/store', 'LocataireController@store')->name('locataires.store');
     Route::get('locataire/{locataire}/edit', 'LocataireController@edit')->name('locataires.edit');
