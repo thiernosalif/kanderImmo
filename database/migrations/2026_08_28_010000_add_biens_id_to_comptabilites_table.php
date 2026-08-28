@@ -9,7 +9,10 @@ class AddBiensIdToComptabilitesTable extends Migration
     public function up()
     {
         Schema::table('comptabilites', function (Blueprint $table) {
-            $table->unsignedBigInteger('biens_id')->nullable()->after('users_id');
+            // bigInteger (signé), pas unsignedBigInteger : biens.id est un bigint signé
+            // dans ce schéma existant (voir articles.biens_id qui référence déjà biens.id
+            // avec succès) — un type unsigned casse la création de la clé étrangère (errno 150).
+            $table->bigInteger('biens_id')->nullable()->after('users_id');
             $table->foreign('biens_id')->references('id')->on('biens');
         });
     }

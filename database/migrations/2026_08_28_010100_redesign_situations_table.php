@@ -23,9 +23,11 @@ class RedesignSituationsTable extends Migration
 
         Schema::create('situation_reglement', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('situations_id');
+            // bigInteger (signé) : toutes les clés de ce schéma existant sont des
+            // bigint signés, pas unsigned (voir reglements.id, situations.id...).
+            $table->bigInteger('situations_id');
             $table->foreign('situations_id')->references('id')->on('situations')->onDelete('cascade');
-            $table->unsignedBigInteger('reglements_id');
+            $table->bigInteger('reglements_id');
             $table->foreign('reglements_id')->references('id')->on('reglements');
             $table->timestamps();
         });
@@ -40,7 +42,7 @@ class RedesignSituationsTable extends Migration
                 'mois', 'annee', 'total_encaisse', 'total_depenses',
                 'commission_taux', 'commission_montant', 'montant_net',
             ]);
-            $table->unsignedBigInteger('reglements_id')->nullable();
+            $table->bigInteger('reglements_id')->nullable();
             $table->foreign('reglements_id')->references('id')->on('reglements');
         });
     }
