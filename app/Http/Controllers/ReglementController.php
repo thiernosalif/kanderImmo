@@ -334,6 +334,7 @@ class ReglementController extends Controller
         $reg->locataires_id = $request->locataires_id;
         $reg->articles_id = $request->articles_id;
         $reg->montant = $request->montant;
+        $reg->taxe = $request->taxe;
         $reg->mois_paie = $request->mois_paie;
         $reg->acompte = $request->acompte;
         $reg->complement = $request->complement;

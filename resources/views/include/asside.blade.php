@@ -87,6 +87,13 @@
                 </a>
             </li>
 
+            <li  title="DEPENSES PAR BIEN">
+                <a href="{{ route('depenses.index') }}">
+                    <span class="menu_icon"><i class="material-icons">&#xE8B9;</i></span>
+                    <span class="menu_title">DEPENSES PAR BIEN</span>
+                </a>
+            </li>
+
             <li title="Site Ecommerce">
                 <a href="#">
                     <span class="menu_icon"><i class="material-icons">&#xe8cb;</i></span>

@@ -28,6 +28,7 @@ class ReglementRequest extends FormRequest
             'articles_id' => 'required',
             'mois_paie' => 'nullable',
             'montant' => 'nullable',
+            'taxe' => 'nullable|numeric|min:0',
             'mode_reglement' => 'nullable',
             'avance' => 'nullable',
             'transactionReference' => 'nullable',

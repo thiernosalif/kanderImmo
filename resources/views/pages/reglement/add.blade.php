@@ -50,6 +50,14 @@
                             {!! $errors->first('montant', '<span style="color:#dd4b39 !important"><i class="uk-icon-times-circle-o uk-text-danger"></i> :message</span>') !!}
                         </div>
                 </div>
+
+                <div class="uk-grid" data-uk-grid-margin>
+                    <div class="uk-width-medium-1-2">
+                            {{ Form::label('taxe', 'Taxe (si applicable)') }}
+                            {{ Form::number('taxe', old('taxe'), array('step' => 'any', 'class'=>'md-input'.($errors->has('taxe') ? ' md-input-danger' : ''))) }}
+                            {!! $errors->first('taxe', '<span style="color:#dd4b39 !important"><i class="uk-icon-times-circle-o uk-text-danger"></i> :message</span>') !!}
+                        </div>
+                </div>
                 
                 
                

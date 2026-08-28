@@ -107,4 +107,12 @@ Route::get('/home', 'HomeController@index')->name('home');
     Route::get('situations/{situation}/pdf', 'SituationController@show')->name('situations.show');
     Route::get('situations/delete/{id}', 'SituationController@destroy')->name('situations.delete');
 
+    /**
+     * Route pour dépenses par bien
+     */
+    Route::get('/depenses', 'DepenseController@index')->name('depenses.index');
+    Route::get('depenses/create', 'DepenseController@create')->name('depenses.create');
+    Route::post('depenses/store', 'DepenseController@store')->name('depenses.store');
+    Route::get('depenses/delete/{id}', 'DepenseController@destroy')->name('depenses.delete');
+
 });

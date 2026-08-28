@@ -243,6 +243,12 @@
                         Montant
                     </td>
                     <td>
+                        Taxe
+                    </td>
+                    <td>
+                        Total
+                    </td>
+                    <td>
                         Mode Reglement
                     </td>
                    <!--  <td>
@@ -260,6 +266,12 @@
                 <tr>
                     <td>
                         {{ $reg->montant }} Fcfa
+                    </td>
+                    <td>
+                        {{ $reg->taxe ? $reg->taxe.' Fcfa' : '-' }}
+                    </td>
+                    <td>
+                        {{ $reg->montant + ($reg->taxe ?? 0) }} Fcfa
                     </td>
                     <td>
                         {{ $reg->mode_reglement }}
@@ -304,6 +316,12 @@
                         Montant
                     </td>
                     <td>
+                        Taxe
+                    </td>
+                    <td>
+                        Total
+                    </td>
+                    <td>
                         Mode Reglement
                     </td>
                     <td scope="col">
@@ -318,6 +336,12 @@
                 <tr>
                     <td>
                         {{ $reg->montant }} Fcfa
+                    </td>
+                    <td>
+                        {{ $reg->taxe ? $reg->taxe.' Fcfa' : '-' }}
+                    </td>
+                    <td>
+                        {{ $reg->montant + ($reg->taxe ?? 0) }} Fcfa
                     </td>
                     <td>
                         {{ $reg->mode_reglement }}
@@ -365,6 +389,12 @@
                         Montant
                     </td>
                     <td>
+                        Taxe
+                    </td>
+                    <td>
+                        Total
+                    </td>
+                    <td>
                         Mode Reglement
                     </td>
                     <td scope="col">
@@ -382,6 +412,12 @@
                     </td>
                     <td>
                         {{ $reg->montant }} Fcfa
+                    </td>
+                    <td>
+                        {{ $reg->taxe ? $reg->taxe.' Fcfa' : '-' }}
+                    </td>
+                    <td>
+                        {{ $reg->montant + ($reg->taxe ?? 0) }} Fcfa
                     </td>
                     <td>
                         {{ $reg->mode_reglement }}

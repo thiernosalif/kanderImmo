@@ -22,7 +22,8 @@
                                 <th>Locataire</th>
                                 <th>Immeuble</th>
                                 <th>Mois payé</th>
-                                <th>Montant</th>
+                                <th>Loyer</th>
+                                <th>Taxe</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -32,10 +33,11 @@
                                     <td>{{ optional(optional($reg->article)->bien)->adresse }}</td>
                                     <td>{{ $reg->mois_paie }}</td>
                                     <td>{{ number_format($reg->montant, 0, ',', ' ') }}</td>
+                                    <td>{{ $reg->taxe ? number_format($reg->taxe, 0, ',', ' ') : '-' }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4">Aucun règlement encaissé sur cette période.</td>
+                                    <td colspan="5">Aucun règlement encaissé sur cette période.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -43,15 +45,19 @@
 
                     <table class="uk-table" style="max-width: 400px; margin-left: auto;">
                         <tr>
-                            <th>Total encaissé</th>
+                            <th>Total encaissé (loyers + taxes)</th>
                             <td>{{ number_format($totalEncaisse, 0, ',', ' ') }}</td>
+                        </tr>
+                        <tr>
+                            <th>&nbsp;&nbsp;dont taxes (hors commission)</th>
+                            <td>{{ number_format($totalTaxes, 0, ',', ' ') }}</td>
                         </tr>
                         <tr>
                             <th>Dépenses (immeubles du propriétaire)</th>
                             <td>{{ number_format($totalDepenses, 0, ',', ' ') }}</td>
                         </tr>
                         <tr>
-                            <th>Commission de gérance ({{ $commissionTaux }}%)</th>
+                            <th>Commission de gérance ({{ $commissionTaux }}% du loyer, hors taxes)</th>
                             <td>{{ number_format($commissionMontant, 0, ',', ' ') }}</td>
                         </tr>
                         <tr>

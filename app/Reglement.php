@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reglement extends Model
 {
     protected $fillable = [
-        'locataires_id','articles_id','created_at', 'mois_paie', 'montant', 'mode_reglement',
+        'locataires_id','articles_id','created_at', 'mois_paie', 'montant', 'taxe', 'mode_reglement',
          'avance','complement','acompte','transactionReference'
     ];
 

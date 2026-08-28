@@ -37,7 +37,8 @@
                 <th>Locataire</th>
                 <th>Immeuble</th>
                 <th>Mois payé</th>
-                <th>Montant</th>
+                <th>Loyer</th>
+                <th>Taxe</th>
             </tr>
         </thead>
         <tbody>
@@ -47,10 +48,11 @@
                     <td>{{ optional(optional($reg->article)->bien)->adresse }}</td>
                     <td>{{ $reg->mois_paie }}</td>
                     <td>{{ number_format($reg->montant, 0, ',', ' ') }}</td>
+                    <td>{{ $reg->taxe ? number_format($reg->taxe, 0, ',', ' ') : '-' }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4">Aucun règlement encaissé sur cette période.</td>
+                    <td colspan="5">Aucun règlement encaissé sur cette période.</td>
                 </tr>
             @endforelse
         </tbody>
@@ -58,15 +60,19 @@
 
     <table class="totaux">
         <tr>
-            <th>TOTAL ENCAISSÉ</th>
+            <th>TOTAL ENCAISSÉ (LOYERS + TAXES)</th>
             <td>{{ number_format($situation->total_encaisse, 0, ',', ' ') }}</td>
+        </tr>
+        <tr>
+            <th>&nbsp;&nbsp;dont taxes (hors commission)</th>
+            <td>{{ number_format($situation->total_taxes, 0, ',', ' ') }}</td>
         </tr>
         <tr>
             <th>DÉPENSES</th>
             <td>{{ number_format($situation->total_depenses, 0, ',', ' ') }}</td>
         </tr>
         <tr>
-            <th>COMMISSION DE GÉRANCE ({{ rtrim(rtrim(number_format($situation->commission_taux, 2), '0'), '.') }}%)</th>
+            <th>COMMISSION DE GÉRANCE ({{ rtrim(rtrim(number_format($situation->commission_taux, 2), '0'), '.') }}% du loyer, hors taxes)</th>
             <td>{{ number_format($situation->commission_montant, 0, ',', ' ') }}</td>
         </tr>
         <tr class="montant-net">

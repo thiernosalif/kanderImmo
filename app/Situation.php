@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Situation extends Model
 {
     protected $fillable = [
-        'proprietaires_id', 'mois', 'annee', 'total_encaisse', 'total_depenses',
+        'proprietaires_id', 'mois', 'annee', 'total_encaisse', 'total_taxes', 'total_depenses',
         'commission_taux', 'commission_montant', 'montant_net', 'users_id',
     ];
 

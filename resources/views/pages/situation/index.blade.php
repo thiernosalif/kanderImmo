@@ -17,6 +17,7 @@
                                     <th>Mois</th>
                                     <th>Année</th>
                                     <th>Total encaissé</th>
+                                    <th>Taxes</th>
                                     <th>Dépenses</th>
                                     <th>Commission</th>
                                     <th>Montant net</th>
@@ -39,6 +40,7 @@
                                             <td>{{ $situation->mois }}</td>
                                             <td>{{ $situation->annee }}</td>
                                             <td>{{ number_format($situation->total_encaisse, 0, ',', ' ') }}</td>
+                                            <td>{{ number_format($situation->total_taxes, 0, ',', ' ') }}</td>
                                             <td>{{ number_format($situation->total_depenses, 0, ',', ' ') }}</td>
                                             <td>{{ number_format($situation->commission_montant, 0, ',', ' ') }}</td>
                                             <td><strong>{{ number_format($situation->montant_net, 0, ',', ' ') }}</strong></td>

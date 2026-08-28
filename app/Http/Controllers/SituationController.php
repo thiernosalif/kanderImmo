@@ -90,17 +90,21 @@ class SituationController extends Controller
             ->with('locataire', 'article.bien')
             ->get();
 
-        $totalEncaisse = (float) $reglements->sum('montant');
+        $totalLoyer = (float) $reglements->sum('montant');
+        $totalTaxes = (float) $reglements->sum('taxe');
+        $totalEncaisse = $totalLoyer + $totalTaxes;
 
         $totalDepenses = (float) Comptabilite::whereIn('biens_id', $biensIds)
             ->whereYear('created_at', $annee)
             ->whereMonth('created_at', $moisNumero)
             ->sum('retrait');
 
-        $commissionMontant = round($totalEncaisse * self::COMMISSION_TAUX / 100, 2);
+        // La commission de gérance ne porte que sur le loyer, jamais sur les taxes
+        // (elles sont juste collectées pour le compte du bailleur, sans marge de l'agence).
+        $commissionMontant = round($totalLoyer * self::COMMISSION_TAUX / 100, 2);
         $montantNet = $totalEncaisse - $commissionMontant - $totalDepenses;
 
-        return compact('reglements', 'totalEncaisse', 'totalDepenses', 'commissionMontant', 'montantNet');
+        return compact('reglements', 'totalLoyer', 'totalTaxes', 'totalEncaisse', 'totalDepenses', 'commissionMontant', 'montantNet');
     }
 
     /**
@@ -164,6 +168,7 @@ class SituationController extends Controller
             'mois' => $request->mois,
             'annee' => $request->annee,
             'total_encaisse' => $calcul['totalEncaisse'],
+            'total_taxes' => $calcul['totalTaxes'],
             'total_depenses' => $calcul['totalDepenses'],
             'commission_taux' => self::COMMISSION_TAUX,
             'commission_montant' => $calcul['commissionMontant'],
