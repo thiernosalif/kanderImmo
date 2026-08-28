@@ -24,4 +24,9 @@ class Reglement extends Model
 {
     return $this->belongsTo(User::class, 'users_id');
 }
+
+    public function situations()
+    {
+        return $this->belongsToMany(Situation::class, 'situation_reglement', 'reglements_id', 'situations_id');
+    }
 }

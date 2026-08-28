@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Article;
 use App\Bien;
 use App\Comptabilite;
 use App\Proprietaire;
@@ -71,6 +72,28 @@ class SituationController extends Controller
     }
 
     /**
+     * Une ligne par locataire (article) des biens du propriétaire, avec le
+     * règlement correspondant s'il existe dans $reglements — sinon null, pour
+     * qu'on affiche un tiret comme sur les relevés papier de l'agence.
+     */
+    private function lignes($proprietaireId, $reglements)
+    {
+        $biensIds = Bien::where('proprietaires_id', $proprietaireId)->pluck('id');
+
+        $articles = Article::whereIn('biens_id', $biensIds)->with('locataire', 'bien')->get();
+
+        $reglementsParArticle = $reglements->keyBy('articles_id');
+
+        return $articles->map(function ($article) use ($reglementsParArticle) {
+            return [
+                'locataire' => $article->locataire,
+                'bien' => $article->bien,
+                'reglement' => $reglementsParArticle->get($article->id),
+            ];
+        });
+    }
+
+    /**
      * Calcule (sans rien enregistrer) le total encaissé, les dépenses et la
      * commission d'un propriétaire pour un mois/année donnés, à partir des
      * règlements et dépenses réellement enregistrés à cette date.
@@ -90,6 +113,8 @@ class SituationController extends Controller
             ->with('locataire', 'article.bien')
             ->get();
 
+        $lignes = $this->lignes($proprietaireId, $reglements);
+
         $totalLoyer = (float) $reglements->sum('montant');
         $totalTaxes = (float) $reglements->sum('taxe');
         $totalEncaisse = $totalLoyer + $totalTaxes;
@@ -104,7 +129,7 @@ class SituationController extends Controller
         $commissionMontant = round($totalLoyer * self::COMMISSION_TAUX / 100, 2);
         $montantNet = $totalEncaisse - $commissionMontant - $totalDepenses;
 
-        return compact('reglements', 'totalLoyer', 'totalTaxes', 'totalEncaisse', 'totalDepenses', 'commissionMontant', 'montantNet');
+        return compact('reglements', 'lignes', 'totalLoyer', 'totalTaxes', 'totalEncaisse', 'totalDepenses', 'commissionMontant', 'montantNet');
     }
 
     /**
@@ -141,7 +166,8 @@ class SituationController extends Controller
     /**
      * Enregistre la situation de façon figée : les montants et la liste des
      * règlements inclus sont sauvegardés tels quels. Une correction ultérieure
-     * d'un règlement n'affectera pas cette situation déjà générée.
+     * d'un règlement n'affectera pas cette situation déjà générée — sauf à
+     * passer par "Modifier" pour ajouter/retirer des règlements à la main.
      */
     public function store(Request $request)
     {
@@ -189,11 +215,73 @@ class SituationController extends Controller
     public function show(Situation $situation)
     {
         $situation->load('proprietaire', 'reglements.locataire', 'reglements.article.bien');
+        $lignes = $this->lignes($situation->proprietaires_id, $situation->reglements);
 
-        $pdf = Pdf::loadView('pages.situation.pdf', compact('situation'));
+        $pdf = Pdf::loadView('pages.situation.pdf', compact('situation', 'lignes'));
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('situation_'.$situation->mois.'_'.$situation->annee.'.pdf');
+    }
+
+    /**
+     * Formulaire pour ajouter/retirer des règlements d'une situation déjà
+     * générée (ex : un paiement arrivé en retard qu'on veut rattacher à un
+     * mois passé plutôt que d'attendre la situation suivante).
+     */
+    public function edit(Situation $situation)
+    {
+        $situation->load('proprietaire', 'reglements');
+
+        $biensIds = Bien::where('proprietaires_id', $situation->proprietaires_id)->pluck('id');
+        $idsInclus = $situation->reglements->pluck('id');
+
+        // Candidats : règlements des biens de ce propriétaire, non attachés à une
+        // AUTRE situation (pour ne jamais compter un règlement dans deux relevés).
+        $candidats = Reglement::whereHas('article.bien', function ($q) use ($biensIds) {
+                $q->whereIn('biens_id', $biensIds);
+            })
+            ->where(function ($q) use ($idsInclus) {
+                $q->whereDoesntHave('situations')
+                  ->orWhereIn('id', $idsInclus);
+            })
+            ->with('locataire', 'article.bien')
+            ->orderByDesc('created_at')
+            ->get();
+
+        $heading = "Modifier la situation";
+
+        return view('pages.situation.edit', compact('situation', 'candidats', 'idsInclus', 'heading'))
+            ->with(['subheading' => $this->subheading, 'route' => $this->route]);
+    }
+
+    /**
+     * Recalcule et sauvegarde la situation à partir des règlements cochés.
+     * Les dépenses ne sont pas retouchées ici — seule la composition en
+     * règlements (donc le loyer, les taxes, la commission et le net) change.
+     */
+    public function update(Request $request, Situation $situation)
+    {
+        $reglementIds = $request->input('reglements_id', []);
+
+        $reglements = Reglement::whereIn('id', $reglementIds)->get();
+
+        $totalLoyer = (float) $reglements->sum('montant');
+        $totalTaxes = (float) $reglements->sum('taxe');
+        $totalEncaisse = $totalLoyer + $totalTaxes;
+        $commissionMontant = round($totalLoyer * self::COMMISSION_TAUX / 100, 2);
+        $montantNet = $totalEncaisse - $commissionMontant - $situation->total_depenses;
+
+        $situation->update([
+            'total_encaisse' => $totalEncaisse,
+            'total_taxes' => $totalTaxes,
+            'commission_montant' => $commissionMontant,
+            'montant_net' => $montantNet,
+        ]);
+
+        $situation->reglements()->sync($reglementIds);
+
+        return redirect()->route('situations.index')
+            ->with('success_msg', 'Situation mise à jour avec succès.');
     }
 
     /**

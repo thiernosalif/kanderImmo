@@ -42,17 +42,17 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($situation->reglements as $reg)
+            @forelse($lignes as $ligne)
                 <tr>
-                    <td>{{ optional($reg->locataire)->prenom }} {{ optional($reg->locataire)->nom }}</td>
-                    <td>{{ optional(optional($reg->article)->bien)->adresse }}</td>
-                    <td>{{ $reg->mois_paie }}</td>
-                    <td>{{ number_format($reg->montant, 0, ',', ' ') }}</td>
-                    <td>{{ $reg->taxe ? number_format($reg->taxe, 0, ',', ' ') : '-' }}</td>
+                    <td>{{ optional($ligne['locataire'])->prenom }} {{ optional($ligne['locataire'])->nom }}</td>
+                    <td>{{ optional($ligne['bien'])->adresse }}</td>
+                    <td>{{ optional($ligne['reglement'])->mois_paie ?? '-' }}</td>
+                    <td>{{ $ligne['reglement'] ? number_format($ligne['reglement']->montant, 0, ',', ' ') : '-' }}</td>
+                    <td>{{ optional($ligne['reglement'])->taxe ? number_format($ligne['reglement']->taxe, 0, ',', ' ') : '-' }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5">Aucun règlement encaissé sur cette période.</td>
+                    <td colspan="5">Aucun locataire trouvé pour ce propriétaire.</td>
                 </tr>
             @endforelse
         </tbody>

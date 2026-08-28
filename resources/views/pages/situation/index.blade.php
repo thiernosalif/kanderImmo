@@ -31,6 +31,9 @@
                                                 <a href="{{ route('situations.show', $situation) }}" title="Télécharger le PDF">
                                                     <i class="material-icons md-24">&#xE2C4;</i>
                                                 </a>
+                                                <a href="{{ route('situations.edit', $situation) }}" title="Modifier les règlements inclus">
+                                                    <i class="material-icons md-24">&#xE254;</i>
+                                                </a>
                                                 <a href="{{ route('situations.delete', $situation->id) }}" class="destroy-btn"
                                                    data-remote="true" data-confirm="Êtes-vous sûr de vouloir supprimer cette situation ?">
                                                     <i class="material-icons md-24">&#xE872;</i>

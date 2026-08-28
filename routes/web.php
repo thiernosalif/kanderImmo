@@ -105,6 +105,8 @@ Route::get('/home', 'HomeController@index')->name('home');
     Route::get('situations/preview', 'SituationController@preview')->name('situations.preview');
     Route::post('situations/store', 'SituationController@store')->name('situations.store');
     Route::get('situations/{situation}/pdf', 'SituationController@show')->name('situations.show');
+    Route::get('situations/{situation}/edit', 'SituationController@edit')->name('situations.edit');
+    Route::put('situations/{situation}/update', 'SituationController@update')->name('situations.update');
     Route::get('situations/delete/{id}', 'SituationController@destroy')->name('situations.delete');
 
     /**
