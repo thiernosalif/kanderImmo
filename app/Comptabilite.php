@@ -7,14 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Comptabilite extends Model
 {
     protected $fillable = [
-        'reglements_id','user_id','retrait', 'depot', 'motif', 'total'
+        'reglements_id','user_id','retrait', 'depot', 'motif', 'total', 'biens_id'
     ];
 
-   /* public function comptablite(){
-        return $this->belongsTo(Reglement::class);
-    }*/
-
-    /*public function comptablite1(){
-        return $this->belongsTo(User::class);
-    }*/
+    public function bien()
+    {
+        return $this->belongsTo(Bien::class, 'biens_id');
+    }
 }

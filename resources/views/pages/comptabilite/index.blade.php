@@ -151,6 +151,19 @@
                        </div>
                    </div>
                </div>
+               <div class="uk-grid uk-grid-divider uk-grid-medium" data-uk-grid-margin>
+                   <div class="uk-width-1-1">
+                       <div class="uk-grid uk-grid-divider uk-grid-medium" data-uk-grid-margin>
+                           <div class="uk-width-1-1">
+                               <div class="uk-form-row">
+                                   {{ Form::label('biens_id', 'Immeuble concerné (pour la situation du propriétaire)') }}
+                                   {{ Form::select('biens_id', $liste_biens, old('biens_id'), array('class'=>'md-input'.($errors->has('biens_id') ? ' md-input-danger' : ''))) }}
+                                   {!! $errors->first('biens_id', '<span style="color:#dd4b39 !important"><i class="uk-icon-times-circle-o uk-text-danger"></i> :message</span>') !!}
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
                <div class="uk-modal-footer">
                    <button type="submit" id="ajouter_retrait" data-disable-with="Ajout en cours..."
                            class="uk-float-right md-btn md-btn-success md-btn-wave-light">

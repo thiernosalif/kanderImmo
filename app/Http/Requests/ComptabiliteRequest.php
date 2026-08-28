@@ -28,6 +28,7 @@ class ComptabiliteRequest extends FormRequest
             'depot' => 'nullable',
             'retrait' => 'nullable',
             'motif' => 'nullable',
+            'biens_id' => 'nullable|exists:biens,id',
 
         ];
     }

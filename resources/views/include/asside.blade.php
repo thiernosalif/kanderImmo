@@ -81,7 +81,7 @@
             </li>
 
             <li  title="SITUATIONS">
-                <a href="{{ route('home') }}">
+                <a href="{{ route('situations.index') }}">
                     <span class="menu_icon"><i class="material-icons">&#xE871;</i></span>
                     <span class="menu_title">SITUATIONS</span>
                 </a>

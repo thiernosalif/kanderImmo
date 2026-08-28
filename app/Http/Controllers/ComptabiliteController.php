@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Bien;
 use App\Comptabilite;
 use App\Http\Requests\ComptabiliteRequest;
 use App\Total;
@@ -39,9 +40,10 @@ class ComptabiliteController extends Controller
         $liste_loc = [null => '- Choisir un Locataire -'] + Locataire::orderBy('id')->pluck('prenom' ,'id')->all();*/
         $heading = "Liste des Comptes";
         $bouton_ajout_title = 'mettre a jour le compte';
+        $liste_biens = [null => '- Aucun (dépense générale) -'] + Bien::orderBy('id')->pluck('adresse', 'id')->all();
         return view(
             'pages.comptabilite.index',
-            compact('liste', 'heading', 'table_headers', 'bouton_ajout_title', 'table_bodies','depot','retrait','id')
+            compact('liste', 'heading', 'table_headers', 'bouton_ajout_title', 'table_bodies','depot','retrait','id','liste_biens')
         )->with(['subheading' => $this->subheading, 'route' => $this->route]);
     }
 
@@ -164,6 +166,7 @@ class ComptabiliteController extends Controller
         $com->motif = $request->motif;
         $com->retrait = $request->retrait;
         $com->depot = 0;
+        $com->biens_id = $request->biens_id;
 
         $com->users_id = Auth::id();
         $total = Total::first();

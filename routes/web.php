@@ -97,4 +97,14 @@ Route::get('/home', 'HomeController@index')->name('home');
      */
     Route::get('/factures/{id}', 'FactureController@index')->name('factures.index');
 
+    /**
+     * Route pour situations
+     */
+    Route::get('/situations', 'SituationController@index')->name('situations.index');
+    Route::get('situations/create', 'SituationController@create')->name('situations.create');
+    Route::get('situations/preview', 'SituationController@preview')->name('situations.preview');
+    Route::post('situations/store', 'SituationController@store')->name('situations.store');
+    Route::get('situations/{situation}/pdf', 'SituationController@show')->name('situations.show');
+    Route::get('situations/delete/{id}', 'SituationController@destroy')->name('situations.delete');
+
 });
