@@ -44,8 +44,11 @@
                data-uk-modal="{center:true}" data-uk-tooltip="{cls:'uk-tooltip-small',pos:'left'}" title="Importer depuis excel">
                 <i class="material-icons">&#xE2C3;</i>
             </a>
-            <a class="md-fab md-fab-small md-fab-primary" href="{{ route('locataires.export') }}" title="Télécharger la liste des locataires">
+            <a class="md-fab md-fab-small md-fab-primary" href="{{ route('locataires.export') }}" title="Télécharger la liste des locataires (CSV)">
                 <i class="material-icons">&#xE2C4;</i>
+            </a>
+            <a class="md-fab md-fab-small" style="background-color:#c0392b" href="{{ route('locataires.exportPdf') }}" title="Télécharger la liste des locataires (PDF)">
+                <i class="material-icons">&#xE415;</i>
             </a>
             <a class="md-fab md-fab-success md-fab-small" href="{{ route('locataires.create') }}" title="{{ $bouton_ajout_title }}">
                 <i class="material-icons">&#xe03b;</i>

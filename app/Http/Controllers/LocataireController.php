@@ -6,6 +6,7 @@ use App\Comptabilite;
 use App\Http\Requests\LocataireRequest;
 use App\Locataire;
 use App\Total;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -295,6 +296,28 @@ class LocataireController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Télécharge la liste des locataires au format PDF (sauvegarde).
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function exportPdf()
+    {
+        $query = Locataire::orderBy('nom');
+
+        if (Auth::user()->zone === "Ziguinchor") {
+            $query->where('users_id', Auth::id());
+        }
+
+        $locataires = $query->get();
+        $dateNow = now()->format('d/m/Y');
+
+        $pdf = Pdf::loadView('pages.locataire.export_pdf', compact('locataires', 'dateNow'));
+        $pdf->setPaper('A4', 'landscape');
+
+        return $pdf->download('locataires_'.now()->format('Y-m-d_His').'.pdf');
     }
 
     /**
